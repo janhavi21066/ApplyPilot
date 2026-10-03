@@ -1,8 +1,14 @@
 from datetime import datetime
-from sqlalchemy import String, Text, DateTime, UniqueConstraint, func
+import enum
+from sqlalchemy import String, Text, DateTime, UniqueConstraint, func, Enum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 from applypilot.db import Base
+
+class WorkMode(str, enum.Enum):
+    REMOTE = "remote"
+    ONSITE = "onsite"
+    HYBRID = "hybrid"
 
 class Job(Base):
     __tablename__ = "jobs"
@@ -14,7 +20,7 @@ class Job(Base):
     title: Mapped[str] = mapped_column(String(255))
     company: Mapped[str] = mapped_column(String(255))
     location: Mapped[str | None] = mapped_column(String(255))
-    is_remote: Mapped[str | None] = mapped_column(String(50))
+    work_mode: Mapped[WorkMode | None] = mapped_column(Enum(WorkMode))
     description: Mapped[str | None] = mapped_column(Text)
     url: Mapped[str] = mapped_column(String(255))
     posted_at: Mapped[datetime] = mapped_column(
